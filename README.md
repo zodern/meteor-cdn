@@ -19,13 +19,18 @@ CDN also provides a template helper to get the CDN_URL your templates
 ```html
 <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'  type='text/css'>  
-    <link href='{{ CDN_URL}}/public/css/custom.css' rel='stylesheet' type='text/css'>
+    <link href='{{CDN_URL}}/public/css/custom.css' rel='stylesheet' type='text/css'>
 </head>
 
 <template name="MasterLayout">
-	<img src="{{ CDN_URL}}/images/profile.jpg"></img>
+	<img src="{{CDN_URL}}/images/profile.jpg"></img>
 </template>
 ```
+
+## Proper 404 handling
+Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. Meteor fixes this problem by:
+* Only allowing static resources to be served at the CDN_URL
+* Returning a proper 404 for any missing static resources
 
 ## Meteor Cluster
 CDN can be used with Meteor-Cluster but there are some important restrictions
@@ -42,4 +47,4 @@ CDN can be used with Meteor-Cluster but there are some important restrictions
 License
 ----
 
-Creative Commons# meteor-cdn
+Creative Commons
