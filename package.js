@@ -1,6 +1,6 @@
 Package.describe({
   name: 'maxkferg:cdn',
-  version: '1.0.1',
+  version: '1.0.2',
   summary: 'Serve Meteor content from a CDN',
   git: 'https://github.com/NitroLabs/metepr',
   documentation: 'README.md'
@@ -8,6 +8,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
+  api.export('CDN','server');
   api.use('webapp','server');
   api.use('templating','client');
   api.addFiles('lib/template.js','client');
@@ -18,5 +19,8 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('maxkferg:cdn');
-  api.addFiles('cdn-tests.js');
+  api.addFiles('tests/server.js','server');
 });
+
+
+
