@@ -118,11 +118,16 @@ Tinytest.add(
 var req = { headers: {}};
 
 var res = { status:0,
+            headers: {},
             write: function(){}, 
             end: function(){},
             writeHead:function(status){
               this.status = status;
-            }};
+            },
+            setHeader:function(key,value){
+              this.headers[key] = value;
+            }
+          };
 
 var nextCalls = 0;
 
@@ -263,5 +268,46 @@ Tinytest.add(
     resetState();
   }
 );
+
+
+
+// Scenario: font is requested from the CDN
+// All fonts should have the access-control-allow-origin header
+Tinytest.add(
+  'Server Side - Font Headers - Add headers to font files',
+  function (test) {
+    var status;
+    var cdn = "https://www.cloudfront.com/";
+    var root = "http://www.meteor.com/";
+    var fixtures = cdn + "packages/local-test_maxkferg_cdn/tests/fixtures/";
+
+    var fonts = [];
+    fonts.push(fixtures + "icomoon.otf");
+    fonts.push(fixtures + "icomoon.eot");
+    fonts.push(fixtures + "icomoon.svg");
+    fonts.push(fixtures + "icomoon.ttf");
+    fonts.push(fixtures + "icomoon.woof");
+    
+    CDN._setRootUrl(root)
+    CDN._setCdnUrl(cdn);
+
+    req.headers.host = url.parse(cdn).host;
+    res.status = 200;
+    
+    for (var i=1; i<fonts.length; i++){
+      req.url = fonts[i];
+      res.nextCalls = nextCalls;
+      CDN._CORSconnectHandler(req,res,next);
+      test.equal(res.status,200);
+      test.equal(nextCalls-res.nextCalls,1);
+      test.equal(res.headers['Strict-Transport-Security'],'max-age=2592000; includeSubDomains','Missing STS Header')
+      resetState(res.headers['Access-Control-Allow-Origin'], '*', 'Missing ACAO Header');
+    }
+  }
+);
+
+
+
+
 
 

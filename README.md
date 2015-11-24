@@ -40,7 +40,7 @@ CDN can be used with Meteor-Cluster but there are some important restrictions
 
 ## What it does
 * Changes the url of the bundled css and js file
-* Adds CORS headers to font (.eot .ttf .woff) files
+* Adds CORS headers to font (.eot .otf .ttf .woff) files
 * Changes ROOT_URL_PATH_PREFIX of the client to ensure hot reload works correctly
 * Provides a template helper
 

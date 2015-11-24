@@ -1,8 +1,8 @@
 Package.describe({
   name: 'maxkferg:cdn',
-  version: '1.0.2',
+  version: '1.1.0',
   summary: 'Serve Meteor content from a CDN',
-  git: 'https://github.com/NitroLabs/metepr',
+  git: 'https://github.com/maxkferg/meteor-cdn',
   documentation: 'README.md'
 });
 
@@ -20,7 +20,12 @@ Package.onTest(function(api) {
   api.use('tinytest');
   api.use('maxkferg:cdn');
   api.addFiles('tests/server.js','server');
-});
 
+  api.addFiles('tests/fixtures/icomoon.eot', 'client', {isAsset: true});
+  api.addFiles('tests/fixtures/icomoon.svg', 'client', {isAsset: true});
+  api.addFiles('tests/fixtures/icomoon.ttf', 'client', {isAsset: true});
+  api.addFiles('tests/fixtures/icomoon.woff', 'client', {isAsset: true});
+  api.addFiles('tests/fixtures/icomoon.otf', 'client', {isAsset: true});
+});
 
 
