@@ -1,6 +1,6 @@
 Package.describe({
   name: 'maxkferg:cdn',
-  version: '1.1.0',
+  version: '1.1.1',
   summary: 'Serve Meteor content from a CDN',
   git: 'https://github.com/maxkferg/meteor-cdn',
   documentation: 'README.md'

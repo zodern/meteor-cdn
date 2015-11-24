@@ -286,7 +286,7 @@ Tinytest.add(
     fonts.push(fixtures + "icomoon.eot");
     fonts.push(fixtures + "icomoon.svg");
     fonts.push(fixtures + "icomoon.ttf");
-    fonts.push(fixtures + "icomoon.woof");
+    fonts.push(fixtures + "icomoon.woff");
     
     CDN._setRootUrl(root)
     CDN._setCdnUrl(cdn);
@@ -296,17 +296,73 @@ Tinytest.add(
     
     for (var i=1; i<fonts.length; i++){
       req.url = fonts[i];
+      res.headers = {};
       res.nextCalls = nextCalls;
       CDN._CORSconnectHandler(req,res,next);
       test.equal(res.status,200);
       test.equal(nextCalls-res.nextCalls,1);
       test.equal(res.headers['Strict-Transport-Security'],'max-age=2592000; includeSubDomains','Missing STS Header')
-      resetState(res.headers['Access-Control-Allow-Origin'], '*', 'Missing ACAO Header');
+      test.equal(res.headers['Access-Control-Allow-Origin'], '*', 'Missing ACAO Header');
     }
+    resetState();
   }
 );
 
 
+
+
+
+// Scenario: font is requested from the CDN with querystring
+// All fonts should have the access-control-allow-origin header
+Tinytest.add(
+  'Server Side - Font Headers - Ignore font query string',
+  function (test) {
+    var status;
+    var cdn = "https://www.cloudfront.com/";
+    var root = "http://www.meteor.com/";
+    var fixtures = cdn + "packages/local-test_maxkferg_cdn/tests/fixtures/";
+    var font = fixtures + "icomoon.woff?-acxumy";
+    
+    CDN._setRootUrl(root)
+    CDN._setCdnUrl(cdn);
+
+    req.url = font
+    req.headers.host = url.parse(cdn).host;
+    res.headers = {};
+    
+    CDN._CORSconnectHandler(req,res,next);
+    test.equal(res.headers['Strict-Transport-Security'],'max-age=2592000; includeSubDomains','Missing STS Header')
+    test.equal(res.headers['Access-Control-Allow-Origin'], '*', 'Missing ACAO Header');
+    resetState()
+  }
+);
+
+
+
+// Scenario: a css file is requested from the CDN with querystring
+// Only font files should have the two headers, not css files
+Tinytest.add(
+  'Server Side - Font Headers - Negative test',
+  function (test) {
+    var status;
+    var cdn = "https://www.cloudfront.com/";
+    var root = "http://www.meteor.com/";
+    var fixtures = cdn + "packages/local-test_maxkferg_cdn/tests/fixtures/";
+    var filepath = fixtures + "icomoon.css";
+    
+    CDN._setRootUrl(root)
+    CDN._setCdnUrl(cdn);
+
+    req.url = filepath
+    req.headers.host = url.parse(cdn).host;
+    res.headers = {};
+    
+    CDN._CORSconnectHandler(req,res,next);
+    test.equal(res.headers['Strict-Transport-Security'], undefined, 'Extra STS Header')
+    test.equal(res.headers['Access-Control-Allow-Origin'], undefined, 'Extra ACAO Header');
+    resetState()
+  }
+);
 
 
 
