@@ -14,14 +14,11 @@ export CDN_URL="mydomain.cloudfront.com" && meteor
 
 
 ## Template Helpers
-CDN also provides a template helper to get the CDN_URL your templates
+CDN also provides a template helper to get the CDN_URL in your templates.
+The CDN_URL helper can not be used in the head block, because Meteor does
+evaluate helpers in the head block.
 
 ```html
-<head>
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'  type='text/css'>  
-    <link href='{{CDN_URL}}/public/css/custom.css' rel='stylesheet' type='text/css'>
-</head>
-
 <template name="MasterLayout">
 	<img src="{{CDN_URL}}/images/profile.jpg"></img>
 </template>
