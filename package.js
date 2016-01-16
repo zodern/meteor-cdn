@@ -11,6 +11,7 @@ Package.onUse(function(api) {
   api.export('CDN','server');
   api.use('webapp','server');
   api.use('templating','client');
+  api.addFiles('lib/utils.js','client');
   api.addFiles('lib/template.js','client');
   api.addFiles('lib/client.js','client');
   api.addFiles('lib/server.js','server');
@@ -19,6 +20,7 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('maxkferg:cdn');
+  api.addFiles('tests/client.js','client');
   api.addFiles('tests/server.js','server');
 
   api.addFiles('tests/fixtures/icomoon.eot', 'client', {isAsset: true});
