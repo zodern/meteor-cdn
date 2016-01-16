@@ -4,7 +4,7 @@ Serve static content from a CDN like CloudFlare or CloudFront. This package chan
 
 ## Installation
 ```sh
-meteor add maxkferg:cdn
+meteor add nitrolabs:cdn
 ```
 
 Setup CloudFront or CloudFlare to request and cache static resources from your Meteor server. Then run Meteor with:
@@ -24,6 +24,9 @@ evaluate helpers in the head block.
 </template>
 ```
 
+## Demo
+A demonstration project is available at [https://github.com/NitroLabs/meteor-cdn-demo](https://github.com/NitroLabs/meteor-cdn-demo). The demo is also serving live from AWS at [cdn.nitrolabs.com](cdn.nitrolabs.com).
+
 ## Proper 404 handling
 Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. Meteor fixes this problem by:
 * Only allowing static resources to be served at the CDN_URL
@@ -37,11 +40,11 @@ CDN can be used with Meteor-Cluster but there are some important restrictions
 
 ## What it does
 * Changes the url of the bundled css and js file
-* Adds CORS headers to font (.eot .otf .ttf .woff) files
+* Adds CORS headers to font (.eot .otf .ttf .woff .woff2) files
 * Changes ROOT_URL_PATH_PREFIX of the client to ensure hot reload works correctly
 * Provides a template helper
 
 License
 ----
 
-Creative Commons
+MIT

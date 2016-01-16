@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'maxkferg:cdn',
-  version: '1.1.3',
+  name: 'nitrolabs:cdn',
+  version: '1.2.0',
   summary: 'Serve Meteor content from a CDN',
-  git: 'https://github.com/maxkferg/meteor-cdn',
+  git: 'https://github.com/nitrolabs/meteor-cdn',
   documentation: 'README.md'
 });
 
@@ -18,7 +18,7 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use('maxkferg:cdn');
+  api.use('nitrolabs:cdn');
   api.addFiles('tests/client.js','client');
   api.addFiles('tests/server.js','server');
 
