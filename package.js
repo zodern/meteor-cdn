@@ -1,6 +1,6 @@
 Package.describe({
   name: 'nitrolabs:cdn',
-  version: '1.2.1',
+  version: '1.2.2',
   summary: 'Serve Meteor content from a CDN',
   git: 'https://github.com/nitrolabs/meteor-cdn',
   documentation: 'README.md'
