@@ -12,6 +12,9 @@ Setup CloudFront or CloudFlare to request and cache static resources from your M
 export CDN_URL="mydomain.cloudfront.com" && meteor
 ```
 
+## Demo
+A demonstration project is available at [https://github.com/NitroLabs/meteor-cdn-demo](https://github.com/NitroLabs/meteor-cdn-demo). The demo is also serving live from AWS at [http://cdn.nitrolabs.com](http://cdn.nitrolabs.com).
+
 
 ## Template Helpers
 CDN also provides a template helper to get the CDN_URL in your templates.
@@ -23,9 +26,6 @@ evaluate helpers in the head block.
 	<img src="{{CDN_URL}}/images/profile.jpg"></img>
 </template>
 ```
-
-## Demo
-A demonstration project is available at [https://github.com/NitroLabs/meteor-cdn-demo](https://github.com/NitroLabs/meteor-cdn-demo). The demo is also serving live from AWS at [cdn.nitrolabs.com](cdn.nitrolabs.com).
 
 ## Proper 404 handling
 Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. Meteor fixes this problem by:
