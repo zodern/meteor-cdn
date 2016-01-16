@@ -107,6 +107,10 @@ Tinytest.add(
   	CDN._setRootUrl(root);
     CDN._setCdnUrl(cdn);
 
+    // We would expect the slashes to be stripped
+    cdn = cdn.slice(0,-1);
+    root = root.slice(0,-1);
+
     test.equal(__meteor_runtime_config__.CDN_URL, cdn, 'Expected Meteor environment to be setup correctly');
     resetState();
   }
