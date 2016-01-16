@@ -11,7 +11,6 @@ Package.onUse(function(api) {
   api.export('CDN','server');
   api.use('webapp','server');
   api.use('templating','client');
-  api.addFiles('lib/utils.js','client');
   api.addFiles('lib/template.js','client');
   api.addFiles('lib/client.js','client');
   api.addFiles('lib/server.js','server');
