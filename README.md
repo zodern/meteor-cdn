@@ -12,6 +12,11 @@ Setup CloudFront or CloudFlare to request and cache static resources from your M
 export CDN_URL="mydomain.cloudfront.com" && meteor
 ```
 
+Setting up CloudFront:
+* Point CloudFront at your Meteor server
+* Whitelist the Host and Strict-Transport-Security headers
+* Set querystring forwarding to "Yes"
+
 ## Demo
 A demonstration project is available at [https://github.com/NitroLabs/meteor-cdn-demo](https://github.com/NitroLabs/meteor-cdn-demo). The demo is also serving live from AWS at [http://cdn.nitrolabs.com](http://cdn.nitrolabs.com).
 
@@ -32,7 +37,7 @@ Meteor currently uses the 200 response code for every request, regardless of whe
 * Only allowing static resources to be served at the CDN_URL
 * Returning a proper 404 for any missing static resources
 
-## Meteor Cluster
+## Meteor Cluster (Issues mostly solved in CDNv1.2)
 CDN can be used with Meteor-Cluster but there are some important restrictions
 * Don't use Cluster with force-ssl: It can cause circular 302 redirects
 * Ensure that CloudFront (or other CDN) points at the primary cluster server otherwise the hot-reload client will try and load bundled resources before they exist. In this case CloudFront may cache error responses from the server.
@@ -41,7 +46,8 @@ CDN can be used with Meteor-Cluster but there are some important restrictions
 ## What it does
 * Changes the url of the bundled css and js file
 * Adds CORS headers to font (.eot .otf .ttf .woff .woff2) files
-* Changes ROOT_URL_PATH_PREFIX of the client to ensure hot reload works correctly
+* Changes ROOT_URL_PATH_PREFIX on the client to ensure hot reload works correctly
+* Makes sure that the correct status code is returned for missing static files
 * Provides a template helper
 
 License
