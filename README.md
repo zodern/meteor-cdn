@@ -1,27 +1,26 @@
-# Meteor-CDN
+Meteor-CDN
+===========
 
-Serve static content from a CDN like CloudFlare or CloudFront. This package changes the domain of the bundled css and js files to the environment variable CDN_URL. If the environment variable is not present, the default behaviour will be unchanged.
+Serve static content from a CDN like CloudFlare or CloudFront. This package changes the domain of the bundled css and js files to the environment variable CDN_URL. If the CDN_URL environment variable is not present, the default behaviour will be unchanged.
 
-## Installation
+Installation
+===============
 ```sh
 meteor add nitrolabs:cdn
 ```
 
-Setup CloudFront or CloudFlare to request and cache static resources from your Meteor server. Then run Meteor with:
+Setup CloudFront or CloudFlare to proxy requests to your Meteor server. Then run Meteor with:
 ```sh
-export CDN_URL="mydomain.cloudfront.com" && meteor
+export CDN_URL="http://mydomain.cloudfront.com" && meteor
 ```
 
-Setting up CloudFront:
-* Point CloudFront at your Meteor server
-* Whitelist the Host and Strict-Transport-Security headers
-* Set querystring forwarding to "Yes"
+Features
+========
 
-## Demo
-A demonstration project is available at [https://github.com/NitroLabs/meteor-cdn-demo](https://github.com/NitroLabs/meteor-cdn-demo). The demo is also serving live from AWS at [http://cdn.nitrolabs.com](http://cdn.nitrolabs.com).
+### Meteor resources are Loaded from your CDN
+CDN automatically sets WebAppInternals.setBundledJsCssPrefix to match CDN_URL so the main Meteor css and js files are loaded from your CDN.
 
-
-## Template Helpers
+### Template helper for other static files
 CDN also provides a template helper to get the CDN_URL in your templates.
 The CDN_URL helper can not be used in the head block, because Meteor does
 evaluate helpers in the head block.
@@ -32,25 +31,61 @@ evaluate helpers in the head block.
 </template>
 ```
 
-## Proper 404 handling
-Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. Meteor fixes this problem by:
+### Webfont headers
+Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Host and Strict-Transport-Security header.
+
+### Proper 404 handling (beta)
+Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. `nitrolabs:cdn` fixes this problem by:
 * Only allowing static resources to be served at the CDN_URL
 * Returning a proper 404 for any missing static resources
 
-## Meteor Cluster (Issues mostly solved in CDNv1.2)
-CDN can be used with Meteor-Cluster but there are some important restrictions
-* Don't use Cluster with force-ssl: It can cause circular 302 redirects
-* Ensure that CloudFront (or other CDN) points at the primary cluster server otherwise the hot-reload client will try and load bundled resources before they exist. In this case CloudFront may cache error responses from the server.
-* Don't point CloudFront to a server that uses cluster balancing - for the same reason
+Detailed Installation Guide
+===========================
+nitrolabs:cdn is compatible with most production setups.
 
-## What it does
-* Changes the url of the bundled css and js file
-* Adds CORS headers to font (.eot .otf .ttf .woff .woff2) files
-* Changes ROOT_URL_PATH_PREFIX on the client to ensure hot reload works correctly
-* Makes sure that the correct status code is returned for missing static files
-* Provides a template helper
+### Using MUP
+When serving your app with mup the ROOT_URL and CDN_URL environment variables can be set from mup.json. See the [meteor-cdn demo](https://github.com/NitroLabs/meteor-cdn-demo/) on Github for more details.
+
+```js
+// mup.json
+{
+    // Normal mup settings
+    // ...
+    // Configure environment
+    "env": {
+        "PORT"                 : 80,
+        "CDN_URL"              : "http://d3k17ze63872d4.cloudfront.net",
+        "ROOT_URL"             : "http://www.mysite.com"
+    }
+}
+  ```
+
+### Using with Galaxy
+CDN works perfectly with MDG Galaxy. Setup instructions:
+* Add the `nitrolabs:cdn` package to your app
+* Point CloudFront at galaxy-ingress.meteor.com (see setting up CloudFront)
+* Set the CDN_URL environment variable to xyz.cloundfront.com
+
+The ROOT_URL and CDN_URL environment variables can be set from settings.json
+```javascript
+// Settings.json
+{
+  "galaxy.meteor.com": {
+    "env": {
+        "ROOT_URL": "https://www.mydomain.com",
+        "CDN_URL": "https://xyz.cloudfront.net",
+        "MONGO_URL": "...",
+        "MONGO_OPLOG_URL": "..."
+    }
+  }
+}
+```
+### Setting up CloudFront:
+* Point CloudFront at your Meteor server
+* Whitelist the Host and Strict-Transport-Security headers
+* Set querystring forwarding to "Yes"
 
 License
-----
+------
 
 MIT
