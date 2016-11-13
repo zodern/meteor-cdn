@@ -85,6 +85,16 @@ The ROOT_URL and CDN_URL environment variables can be set from settings.json
 * Whitelist the Host and Strict-Transport-Security headers
 * Set querystring forwarding to "Yes"
 
+Development and Testing
+-----------------------
+We welcome contributions from the community. We aim to test and merge within 24 hours, 
+especially for pull requests that fix existing bugs or add relevant functionality. 
+Please make sure all tests pass before submitting a pull request:
+```sh
+meteor test-packages ./
+```
+
+
 License
 ------
 

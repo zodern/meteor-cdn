@@ -2,12 +2,14 @@ var url = Npm.require("url");
 var path = Npm.require("path");
 
 
+CONTROLLER = new CDN._controllerClass();
+
 // These tests directly influence the Meteor server that
 // is running them. Therefore the ROOT_URL and
 // CDN_URL must be reset after every test
 function resetState(){
-  CDN._setCdnUrl(process.env.CDN_URL);
-  CDN._setRootUrl(process.env.ROOT_URL);
+  CONTROLLER._setCdnUrl(process.env.CDN_URL);
+  CONTROLLER._setRootUrl(process.env.ROOT_URL);
 }
 
 
@@ -20,10 +22,10 @@ Tinytest.add(
     var root1 = "https://www.meteor.com/e9043utosn/";
     var root2 = "http://www.meteor.com/e9043utosn/";
 
-    result = CDN._validateSettings(root1,cdn);
+    result = CONTROLLER._validateSettings(root1,cdn);
     test.isTrue(result, "validateSettings should return True if the settings are valid");
 
-    result = CDN._validateSettings(root2,cdn);
+    result = CONTROLLER._validateSettings(root2,cdn);
     test.isTrue(result, "validateSettings should return True if the settings are valid");
     resetState();
   }
@@ -38,13 +40,13 @@ Tinytest.add(
     cdn = "https://www.cloudfront.com/s9ufe3u2rns/";
     root = "https://www.meteor.com/e9043utosn/";
 
-    result = CDN._validateSettings(undefined,cdn);
+    result = CONTROLLER._validateSettings(undefined,cdn);
     test.isFalse(result, "validateSettings should return False if the settings are insufficient");
 
-    result = CDN._validateSettings(root,undefined);
+    result = CONTROLLER._validateSettings(root,undefined);
     test.isFalse(result, "validateSettings should return False if the settings are insufficient");
 
-    result = CDN._validateSettings(undefined,undefined);
+    result = CONTROLLER._validateSettings(undefined,undefined);
     test.isFalse(result, "validateSettings should return False if the settings are insufficient");
     resetState();
   }
@@ -64,19 +66,19 @@ Tinytest.add(
     rootInvalid2 = "www.meteor.com/e9043utosn/"
 
     test.throws(function(){
-      CDN._validateSettings(rootInvalid1,cdnValid);
+      CONTROLLER._validateSettings(rootInvalid1,cdnValid);
     }, "ROOT_URL must use http or https protocol, not ddp:");
 
     test.throws(function(){
-      CDN._validateSettings(rootInvalid2,cdnValid);
+      CONTROLLER._validateSettings(rootInvalid2,cdnValid);
     }, "ROOT_URL must use http or https protocol, not null");
 
     test.throws(function(){
-      CDN._validateSettings(rootValid,cdnInvalid1);
+      CONTROLLER._validateSettings(rootValid,cdnInvalid1);
     }, "CDN_URL must use http or https protocol, not ddp:");
 
     test.throws(function(){
-      CDN._validateSettings(rootValid,cdnInvalid2);
+      CONTROLLER._validateSettings(rootValid,cdnInvalid2);
     }, "CDN_URL must use http or https protocol, not null");
     resetState();
   }
@@ -89,8 +91,8 @@ Tinytest.add(
 Tinytest.add(
   'Server Side - CDN Disabled - CDN_URL missing',
   function (test) {
-  	CDN._setCdnUrl(undefined);
-  	CDN._setRootUrl("http://www.meteor.com/e9043utosn/");
+  	CONTROLLER._setCdnUrl(undefined);
+  	CONTROLLER._setRootUrl("http://www.meteor.com/e9043utosn/");
   	test.equal(__meteor_runtime_config__.CDN_URL, undefined, 'Expected Meteor environment to be unchanged');
     resetState();
   }
@@ -104,8 +106,8 @@ Tinytest.add(
   function (test) {
   	cdn = "http://www.cloudfront.com/s9ufe3u2rns/";
   	root = "http://www.meteor.com/e9043utosn/";
-  	CDN._setRootUrl(root);
-    CDN._setCdnUrl(cdn);
+  	CONTROLLER._setRootUrl(root);
+    CONTROLLER._setCdnUrl(cdn);
 
     // We would expect the slashes to be stripped
     cdn = cdn.slice(0,-1);
@@ -150,18 +152,18 @@ Tinytest.add(
     var root = "http://www.meteor.com/e9043utosn/";
     var staticUrl1 = root + "myimages.js";
     var staticUrl2 = root + "images/myImage.js";
-    CDN._setRootUrl(root);
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root);
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = staticUrl1;
     req.headers.host = root;
     res.status = 200;
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,200);
 
     req.url = staticUrl2;
     req.headers.host = root;
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,200);
     resetState();
   }
@@ -177,13 +179,13 @@ Tinytest.add(
     var status;
     var cdn = "http://www.cloudfront.com/";
     var root = "http://www.meteor.com/";
-    CDN._setRootUrl(root)
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root)
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = root;
     req.headers.host = root;
     res.status = 200;
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,200);
     resetState();
   }
@@ -199,14 +201,14 @@ Tinytest.add(
     var status;
     var cdn = "https://www.cloudfront.com/";
     var root = "https://www.meteor.com/";
-    CDN._setRootUrl(root);
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root);
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = cdn;
     req.headers.host = url.parse(cdn).host;
     res.nextCalls = nextCalls;
 
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,404);
     test.equal(nextCalls,res.nextCalls);
     resetState();
@@ -225,21 +227,21 @@ Tinytest.add(
     var root = "https://www.meteor.com/";
     var staticUrl1 = cdn + "myimages.js";
     var staticUrl2 = cdn + "images/myImage.js";
-    CDN._setRootUrl(root);
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root);
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = staticUrl1;
     req.headers.host = url.parse(cdn).host;
     res.nextCalls = nextCalls;
 
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,404);
     test.equal(nextCalls,res.nextCalls);
 
     req.url = staticUrl2;
     req.headers.cdn = root;
 
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,404);
     test.equal(nextCalls,res.nextCalls);
     resetState();
@@ -258,15 +260,15 @@ Tinytest.add(
     var root = "http://www.meteor.com/";
     var staticUrl = cdn + "packages/underscore.js";
 
-    CDN._setRootUrl(root)
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root)
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = staticUrl;
     req.headers.host = url.parse(cdn).host;
     res.status = 200;
     res.nextCalls = nextCalls;
 
-    CDN._static404connectHandler(req,res,next);
+    CONTROLLER._static404connectHandler(req,res,next);
     test.equal(res.status,200);
     test.equal(nextCalls-res.nextCalls,1);
     resetState();
@@ -292,8 +294,8 @@ Tinytest.add(
     fonts.push(fixtures + "icomoon.ttf");
     fonts.push(fixtures + "icomoon.woff");
 
-    CDN._setRootUrl(root)
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root)
+    CONTROLLER._setCdnUrl(cdn);
 
     req.headers.host = url.parse(cdn).host;
     res.status = 200;
@@ -302,7 +304,7 @@ Tinytest.add(
       req.url = fonts[i];
       res.headers = {};
       res.nextCalls = nextCalls;
-      CDN._CORSconnectHandler(req,res,next);
+      CONTROLLER._CORSconnectHandler(req,res,next);
       test.equal(res.status,200);
       test.equal(nextCalls-res.nextCalls,1);
       test.equal(res.headers['Strict-Transport-Security'],'max-age=2592000; includeSubDomains','Missing STS Header')
@@ -327,14 +329,14 @@ Tinytest.add(
     var fixtures = cdn + "packages/local-test_maxkferg_cdn/tests/fixtures/";
     var font = fixtures + "icomoon.woff?-acxumy";
 
-    CDN._setRootUrl(root)
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root)
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = font
     req.headers.host = url.parse(cdn).host;
     res.headers = {};
 
-    CDN._CORSconnectHandler(req,res,next);
+    CONTROLLER._CORSconnectHandler(req,res,next);
     test.equal(res.headers['Strict-Transport-Security'],'max-age=2592000; includeSubDomains','Missing STS Header')
     test.equal(res.headers['Access-Control-Allow-Origin'], '*', 'Missing ACAO Header');
     resetState()
@@ -354,14 +356,14 @@ Tinytest.add(
     var fixtures = cdn + "packages/local-test_maxkferg_cdn/tests/fixtures/";
     var filepath = fixtures + "icomoon.css";
 
-    CDN._setRootUrl(root);
-    CDN._setCdnUrl(cdn);
+    CONTROLLER._setRootUrl(root);
+    CONTROLLER._setCdnUrl(cdn);
 
     req.url = filepath;
     req.headers.host = url.parse(cdn).host;
     res.headers = {};
 
-    CDN._CORSconnectHandler(req,res,next);
+    CONTROLLER._CORSconnectHandler(req,res,next);
     test.equal(res.headers['Strict-Transport-Security'], undefined, 'Extra STS Header');
     test.equal(res.headers['Access-Control-Allow-Origin'], undefined, 'Extra ACAO Header');
     resetState()
