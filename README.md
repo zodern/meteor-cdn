@@ -31,6 +31,13 @@ evaluate helpers in the head block.
 </template>
 ```
 
+### Getting CDN url in Javascript
+CDN exposes function which can be used to get current CDN address.
+
+```javascript
+CDN.get_cdn_url()
+```
+
 ### Webfont headers
 Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Host and Strict-Transport-Security header.
 
