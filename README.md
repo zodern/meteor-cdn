@@ -37,6 +37,33 @@ CDN exposes function which can be used to get current CDN address.
 ```javascript
 CDN.get_cdn_url()
 ```
+### Modifying headers to allow caching of public files
+By default all files in Meteor public folder have `cache-content: public, max-age: 0` header set, which directs the browser / CDN to cache the files for 0 seconds and means that the files are **always** served from the original server and never cached. By setting `CDN.config.headers` you have the ability to set custom headers for files / folders in the public folder to make files in public folder being cached. Path used in `CDN.config.header` can be full path to file or folder which under the files are in.
+
+Below is an example on setting up caching for public folder. Add the configuration to your server, preferably inside your `Meteor.startup` function:
+
+```javascript
+// Best to only setup caching on production so things do not get cached on development
+if (Meteor.isProduction) {
+    CDN.config({
+        headers: {
+            // Files in this example folder change very infrequently
+            "/someicons/": { "cache-control": "public, max-age: 10000" },
+            // We can set smaller caching times for individual files
+            "/someicons/changingIcon.png": { "cache-control": "public, max-age: 100" },
+            // This folder contains subfolders and files under them
+            "/staticassets/": { "cache-control": "public, max-age: 5000" },
+        };
+    });
+}
+```
+
+To verify that the headers we're being set correctly for your assets, you can:
+- Open **Chrome Developer Tools**
+- Open **Network** tab
+- Make sure the topleft recording balloon is set to record
+- Refresh page
+- Select assets you set the headers for and verify that the **Response Headers** section shows correct headers (remember to remove the production check if trying to check the headers on development environment).
 
 ### Webfont headers
 Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Host and Strict-Transport-Security header.
