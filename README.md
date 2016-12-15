@@ -40,7 +40,7 @@ CDN.get_cdn_url()
 ### Modifying headers to allow caching of public files
 By default all files in Meteor public folder have `cache-content: public, max-age: 0` header set, which directs the browser / CDN to cache the files for 0 seconds and means that the files are **always** served from the original server and never cached. By setting `CDN.config.headers` you have the ability to set custom headers for files / folders in the public folder to make files in public folder being cached. Path used in `CDN.config.header` can be full path to file or folder which under the files are in.
 
-Below is an example on setting up caching for public folder:
+Below is an example on setting up caching for public folder. Add the configuration to your server, preferably inside your `Meteor.startup` function:
 
 ```javascript
 // Best to only setup caching on production so things do not get cached on development
