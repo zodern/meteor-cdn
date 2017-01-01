@@ -66,7 +66,7 @@ To verify that the headers we're being set correctly for your assets, you can:
 - Select assets you set the headers for and verify that the **Response Headers** section shows correct headers (remember to remove the production check if trying to check the headers on development environment).
 
 ### Webfont headers
-Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Host and Strict-Transport-Security header.
+Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Origin and Strict-Transport-Security headers.
 
 ### Proper 404 handling (beta)
 Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. `nitrolabs:cdn` fixes this problem by:
@@ -97,8 +97,8 @@ When serving your app with mup the ROOT_URL and CDN_URL environment variables ca
 ### Using with Galaxy
 CDN works perfectly with MDG Galaxy. Setup instructions:
 * Add the `nitrolabs:cdn` package to your app
-* Point CloudFront at galaxy-ingress.meteor.com (see setting up CloudFront)
-* Set the CDN_URL environment variable to xyz.cloundfront.com
+* Point CloudFront to your meteor server (see setting up CloudFront)
+* Set the CDN_URL environment variable to xyz.cloudfront.com
 
 The ROOT_URL and CDN_URL environment variables can be set from settings.json
 ```javascript
@@ -114,10 +114,17 @@ The ROOT_URL and CDN_URL environment variables can be set from settings.json
   }
 }
 ```
-### Setting up CloudFront:
-* Point CloudFront at your Meteor server
-* Whitelist the Host and Strict-Transport-Security headers
-* Set querystring forwarding to "Yes"
+
+### Setting up CloudFront
+Settings described in this section should be set to your CloudFront distribution. All settings here are just the settings that need to be changed, you can leave all other settings to default values when creating the distribution.
+
+* **Origin Domain Name**: yourMeteorServer.com (point this to address where your Meteor server is located)
+* **Origin Protocol Policy**: Match Viewer
+* **Viewer Protocol Policy**: HTTPS Only (Leave this as HTTP and HTTPS if your server does not have SSL enabled)
+* **Forward Headers**: Whitelist
+* **Whitelist Headers**: Origin, Strict-Transport-Security (Origin can be selected from the list but latter needs to be typed into the textfield and added manually)
+* **Query String Forwarding and Caching**: Forward all, cache based on all
+* **Compress Objects Automatically**: Yes
 
 Development and Testing
 -----------------------
