@@ -1,13 +1,13 @@
 Package.describe({
   name: 'nitrolabs:cdn',
-  version: '1.2.10',
+  version: '1.3.0',
   summary: 'Serve Meteor content from a CDN',
   git: 'https://github.com/nitrolabs/meteor-cdn',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.1.0.2');
+  api.versionsFrom('1.4');
   api.export('CDN','server');
   api.export('CDN','client');
   api.use('webapp','server');

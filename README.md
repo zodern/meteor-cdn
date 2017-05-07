@@ -128,8 +128,8 @@ Settings described in this section should be set to your CloudFront distribution
 
 Development and Testing
 -----------------------
-We welcome contributions from the community. We aim to test and merge within 24 hours, 
-especially for pull requests that fix existing bugs or add relevant functionality. 
+We welcome contributions from the community. We aim to test and merge within 24 hours,
+especially for pull requests that fix existing bugs or add relevant functionality.
 Please make sure all tests pass before submitting a pull request:
 ```sh
 meteor test-packages ./
