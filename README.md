@@ -3,6 +3,10 @@ Meteor-CDN
 
 Serve static content from a CDN like CloudFlare or CloudFront. This package changes the domain of the bundled css and js files to the environment variable CDN_URL. If the CDN_URL environment variable is not present, the default behaviour will be unchanged.
 
+Fork of [nitrolabs/meteor-cdn](https://github.com/nitrolabs/meteor-cdn/) with two changes for compatibility with [mup-cloud-front](https://github.com/zodern/mup-cloud-front):
+- Appends `CDN_URL` with a deployment version if available
+- Does not use the CDN for css files.
+
 Installation
 ===============
 ```sh
