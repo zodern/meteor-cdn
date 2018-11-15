@@ -1,6 +1,6 @@
 Package.describe({
   name: 'zodern:cdn',
-  version: '1.3.0',
+  version: '1.4.0',
   summary: 'Serve Meteor content from a CDN',
   git: 'https://github.com/zodern/meteor-cdn',
   documentation: 'README.md'
