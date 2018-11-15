@@ -10,7 +10,7 @@ Fork of [nitrolabs/meteor-cdn](https://github.com/nitrolabs/meteor-cdn/) with tw
 Installation
 ===============
 ```sh
-meteor add nitrolabs:cdn
+meteor add zodern:cdn
 ```
 
 Setup CloudFront or CloudFlare to proxy requests to your Meteor server. Then run Meteor with:
@@ -73,13 +73,13 @@ To verify that the headers we're being set correctly for your assets, you can:
 Google Chrome and several other mainstream browsers prevent webfonts being loaded from via CORS, unless the [Strict-Transport-Security  header](https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security) is set correctly. This package automatically adds the correct CORS and STS headers to webfont files to prevent this issue. When setting up Cloudfront or CloudFlare you should whitelist the Origin and Strict-Transport-Security headers.
 
 ### Proper 404 handling (beta)
-Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. `nitrolabs:cdn` fixes this problem by:
+Meteor currently uses the 200 response code for every request, regardless of whether the route or static resource exists. This can cause the CDN to cache error messages for static resources. `zodern:cdn` fixes this problem by:
 * Only allowing static resources to be served at the CDN_URL
 * Returning a proper 404 for any missing static resources
 
 Detailed Installation Guide
 ===========================
-nitrolabs:cdn is compatible with most production setups.
+zodern:cdn is compatible with most production setups.
 
 ### Using MUP
 When serving your app with mup the ROOT_URL and CDN_URL environment variables can be set from mup.json. See the [meteor-cdn demo](https://github.com/NitroLabs/meteor-cdn-demo/) on Github for more details.
@@ -100,7 +100,7 @@ When serving your app with mup the ROOT_URL and CDN_URL environment variables ca
 
 ### Using with Galaxy
 CDN works perfectly with MDG Galaxy. Setup instructions:
-* Add the `nitrolabs:cdn` package to your app
+* Add the `zodern:cdn` package to your app
 * Point CloudFront to your meteor server (see setting up CloudFront)
 * Set the CDN_URL environment variable to xyz.cloudfront.com
 
